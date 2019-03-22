@@ -12,8 +12,13 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="#">Link1</a></li>
-        <li><a href="#">Link2</a></li>
+      <% if current_user.nil?%>
+        <li><a href="<%= new_user_session_path %>">Iniciar Sesión</a></li>
+        <li><a href="<%= new_user_registration_path %>">Registrarse</a></li>
+      <% else %>
+        <li><a href="#">Hola <%= current_user.email %></a></li>
+        <li><%= link_to 'Cerrar Sesión', destroy_user_session_path, method: :delete%></li>
+      <% end %>     
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">

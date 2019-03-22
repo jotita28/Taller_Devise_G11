@@ -1,6 +1,7 @@
 class HistoriesController < ApplicationController
   before_action :set_history, only: [:show, :edit, :update, :destroy]
-
+  before_action :authenticate_user!, except: :index
+  before_action :check_author, only: [:edit, :delete]
   # GET /histories
   # GET /histories.json
   def index
@@ -25,7 +26,7 @@ class HistoriesController < ApplicationController
   # POST /histories.json
   def create
     @history = History.new(history_params)
-
+    @history.user = current_user
     respond_to do |format|
       if @history.save
         format.html { redirect_to @history, notice: 'History was successfully created.' }
@@ -70,5 +71,10 @@ class HistoriesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def history_params
       params.require(:history).permit(:title, :picture, :content, :remote_picture_url)
+    end
+
+
+    def check_author
+      redirect_to histories_path, alert: 'CALMA ONVRE!' unless @history.user == current_user
     end
 end
